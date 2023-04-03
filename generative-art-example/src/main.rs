@@ -8,23 +8,28 @@ fn main() {
         .run();
 }
 
-struct Model {}
+struct Model {
+    diagonal_choices: Vec<bool>,
+}
 
 fn model(_app: &App) -> Model {
-    Model {}
+    let diagonal_choices = (0..4).map(|_| rand::random()).collect::<Vec<bool>>();
+    Model { diagonal_choices }
 }
 
 fn update(_app: &App, _model: &mut Model, _update: Update) {}
 
-fn view(app: &App, _model: &Model, frame: Frame) {
+fn view(app: &App, model: &Model, frame: Frame) {
     frame.clear(WHITE);
 
     let draw = app.draw();
 
     let window_rect = app.window_rect();
+    let mut iter_diagonal_choices = model.diagonal_choices.iter();
 
     for rect in window_rect.subdivisions_iter() {
-        if rand::random() {
+        let diagonal_choice = *iter_diagonal_choices.next().unwrap();
+        if diagonal_choice {
             draw.line()
                 .start(rect.bottom_right())
                 .end(rect.top_left())
