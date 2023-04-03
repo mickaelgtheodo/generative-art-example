@@ -13,7 +13,7 @@ struct Model {
 }
 
 fn model(_app: &App) -> Model {
-    let diagonal_choices = (0..4).map(|_| rand::random()).collect::<Vec<bool>>();
+    let diagonal_choices = (0..64).map(|_| rand::random()).collect::<Vec<bool>>();
     Model { diagonal_choices }
 }
 
@@ -28,19 +28,23 @@ fn view(app: &App, model: &Model, frame: Frame) {
     let mut iter_diagonal_choices = model.diagonal_choices.iter();
 
     for rect in window_rect.subdivisions_iter() {
-        let diagonal_choice = *iter_diagonal_choices.next().unwrap();
-        if diagonal_choice {
-            draw.line()
-                .start(rect.bottom_right())
-                .end(rect.top_left())
-                .weight(10.0)
-                .color(BLACK);
-        } else {
-            draw.line()
-                .start(rect.top_right())
-                .end(rect.bottom_left())
-                .weight(10.0)
-                .color(BLACK);
+        for rect in rect.subdivisions_iter() {
+            for rect in rect.subdivisions_iter() {
+                let diagonal_choice = *iter_diagonal_choices.next().unwrap();
+                if diagonal_choice {
+                    draw.line()
+                        .start(rect.bottom_right())
+                        .end(rect.top_left())
+                        .weight(10.0)
+                        .color(BLACK);
+                } else {
+                    draw.line()
+                        .start(rect.top_right())
+                        .end(rect.bottom_left())
+                        .weight(10.0)
+                        .color(BLACK);
+                }
+            }
         }
     }
 
