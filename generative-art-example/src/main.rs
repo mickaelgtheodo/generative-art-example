@@ -1,4 +1,4 @@
-use nannou::prelude::*;
+use nannou::{prelude::*, rand};
 
 fn main() {
     nannou::app(model)
@@ -24,11 +24,19 @@ fn view(app: &App, _model: &Model, frame: Frame) {
     let window_rect = app.window_rect();
 
     for rect in window_rect.subdivisions_iter() {
-        draw.line()
-            .start(rect.bottom_right())
-            .end(rect.top_left())
-            .weight(10.0)
-            .color(BLACK);
+        if rand::random() {
+            draw.line()
+                .start(rect.bottom_right())
+                .end(rect.top_left())
+                .weight(10.0)
+                .color(BLACK);
+        } else {
+            draw.line()
+                .start(rect.top_right())
+                .end(rect.bottom_left())
+                .weight(10.0)
+                .color(BLACK);
+        }
     }
 
     draw.to_frame(app, &frame).unwrap();
