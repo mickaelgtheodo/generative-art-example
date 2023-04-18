@@ -20,10 +20,16 @@ fn model(app: &App) -> Model {
     let window_rect = app.window_rect();
     let mut tiles: Vec<Tile> = Vec::new();
     for rect in window_rect.subdivisions_iter() {
-        tiles.push(Tile {
-            choice: rand::random(),
-            rect,
-        });
+        for rect in rect.subdivisions_iter() {
+            for rect in rect.subdivisions_iter() {
+                for rect in rect.subdivisions_iter() {
+                    tiles.push(Tile {
+                        choice: rand::random(),
+                        rect,
+                    });
+                }
+            }
+        }
     }
     Model { tiles }
 }
