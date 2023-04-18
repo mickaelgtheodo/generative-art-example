@@ -8,32 +8,46 @@ fn main() {
         .run();
 }
 
-struct Model {}
+struct Model {
+    tiles: Vec<Tile>,
+}
+struct Tile {
+    choice: bool,
+    rect: Rect,
+}
 
-fn model(_app: &App) -> Model {
-    Model {}
+fn model(app: &App) -> Model {
+    let window_rect = app.window_rect();
+    let mut tiles: Vec<Tile> = Vec::new();
+    for rect in window_rect.subdivisions_iter() {
+        tiles.push(Tile {
+            choice: rand::random(),
+            rect,
+        });
+    }
+    Model { tiles }
 }
 
 fn update(_app: &App, _model: &mut Model, _update: Update) {}
 
-fn view(app: &App, _model: &Model, frame: Frame) {
+fn view(app: &App, model: &Model, frame: Frame) {
     frame.clear(WHITE);
 
     let draw = app.draw();
 
-    let window_rect = app.window_rect();
+    let tiles: &Vec<Tile> = &model.tiles;
 
-    for rect in window_rect.subdivisions_iter() {
-       if rand::random() {
+    for tile in tiles {
+        if tile.choice {
             draw.line()
-                .start(rect.bottom_right())
-                .end(rect.top_left())
+                .start(tile.rect.bottom_right())
+                .end(tile.rect.top_left())
                 .weight(10.0)
                 .color(BLACK);
         } else {
             draw.line()
-                .start(rect.top_right())
-                .end(rect.bottom_left())
+                .start(tile.rect.top_right())
+                .end(tile.rect.bottom_left())
                 .weight(10.0)
                 .color(BLACK);
         }
