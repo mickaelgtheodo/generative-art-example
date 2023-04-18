@@ -21,11 +21,15 @@ fn view(app: &App, _model: &Model, frame: Frame) {
 
     let draw = app.draw();
 
-    draw.line()
-        .start(app.window_rect().bottom_right())
-        .end(app.window_rect().top_left())
-        .weight(10.0)
-        .color(BLACK);
+    let window_rect = app.window_rect();
+
+    for rect in window_rect.subdivisions_iter() {
+        draw.line()
+            .start(rect.bottom_right())
+            .end(rect.top_left())
+            .weight(10.0)
+            .color(BLACK);
+    }
 
     draw.to_frame(app, &frame).unwrap();
 }
